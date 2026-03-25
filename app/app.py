@@ -8,6 +8,14 @@ sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 from utils.validator import validate_columns
 from utils.predictor import make_predictions
 
+@st.cache_data
+def load_data(file):
+    return pd.read_csv(file)
+
+@st.cache_data
+def run_predictions(df):
+    return make_predictions(df)
+
 selected_columns = ['time(millisecond)', 'latitude', 'longitude',
        'height_above_takeoff(feet)',
        'height_above_ground_at_drone_location(feet)',
@@ -33,7 +41,7 @@ uploaded_file = st.file_uploader("Upload CSV", type=["csv"])
 
 if uploaded_file is not None:
 
-    df = pd.read_csv(uploaded_file)
+    df = load_data(uploaded_file)
 
     st.subheader("Uploaded Data")
     st.dataframe(df.head().astype(object))
