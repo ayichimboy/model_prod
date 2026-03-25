@@ -36,7 +36,7 @@ if uploaded_file is not None:
     df = pd.read_csv(uploaded_file)
 
     st.subheader("Uploaded Data")
-    st.dataframe(df.head())
+    st.dataframe(df.head().astype(object))
 
     # Validate Columns
     valid, missing = validate_columns(df)
@@ -51,15 +51,14 @@ if uploaded_file is not None:
 
         if st.button("Run Prediction"):
 
-            results = make_predictions(df[selected_columns])
+            results = pd.DataFrame(make_predictions(df), columns=["Class"])
             results = results.astype(object)
-
 
             st.subheader("Prediction Results")
 
             st.dataframe(results)
 
-            csv = results.to_csv(index=False)
+            csv = pd.DataFrame(results).to_csv(index=False)
 
             st.download_button(
                 label="Download Predictions",
